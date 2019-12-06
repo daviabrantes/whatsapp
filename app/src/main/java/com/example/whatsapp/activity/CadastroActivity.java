@@ -29,7 +29,7 @@ public class CadastroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
 
-        campoEmail = findViewById(R.id.editEmail);
+        campoEmail = findViewById(R.id.editLoginEmail);
         campoNome = findViewById(R.id.editNome);
         campoSenha = findViewById(R.id.editSenha);
     }
