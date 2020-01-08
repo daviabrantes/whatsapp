@@ -15,10 +15,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.whatsapp.R;
 import com.example.whatsapp.config.ConfiguracaoFirebase;
 import com.example.whatsapp.helper.Base64Custom;
@@ -27,11 +29,14 @@ import com.example.whatsapp.helper.UsuarioFirebase;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ConfiguracoesActivity extends AppCompatActivity {
 
@@ -41,7 +46,8 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     };
 
     private ImageButton imageButtonCamera, imageButtonGaleria;
-    private ImageView imageProfile;
+    private CircleImageView imageProfile;
+    private EditText editPerfilNome;
     private StorageReference storageReference;
     private String idUsuario;
     private static final int SELECAO_CAMERA = 100;
@@ -56,6 +62,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGaleria = findViewById(R.id.imageButtonGaleria);
         imageProfile = findViewById(R.id.profileImage);
+        editPerfilNome = findViewById(R.id.editPerfilNome);
 
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
 
@@ -68,6 +75,19 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        FirebaseUser usuario = UsuarioFirebase.getUsuarioAtual();
+        Uri url = usuario.getPhotoUrl();
+
+        if (url != null) {
+            Glide.with(ConfiguracoesActivity.this)
+                    .load(url)
+                    .into(imageProfile);
+        } else {
+            imageProfile.setImageResource(R.drawable.padrao);
+        }
+
+        editPerfilNome.setText(usuario.getDisplayName());
 
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +132,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                     imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
                     byte[] dadosImagem = baos.toByteArray();
 
-                    StorageReference imagemRef = storageReference
+                    final StorageReference imagemRef = storageReference
                             .child("imagens")
                             .child("perfil")
                             .child(idUsuario + ".jpeg");
@@ -127,6 +147,14 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(ConfiguracoesActivity.this, "Sucesso ao fazer upload da imagem", Toast.LENGTH_SHORT).show();
+
+                            imagemRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Uri url = uri;
+                                    atualizaFotoUsuario( url );
+                                }
+                            });
                         }
                     });
                 }
@@ -134,6 +162,10 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                 e.getStackTrace();
             }
         }
+    }
+
+    public void atualizaFotoUsuario(Uri url){
+        UsuarioFirebase.atualizarFotoUsuario(url);
     }
 
     @Override
