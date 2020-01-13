@@ -26,6 +26,7 @@ import com.example.whatsapp.config.ConfiguracaoFirebase;
 import com.example.whatsapp.helper.Base64Custom;
 import com.example.whatsapp.helper.Permissao;
 import com.example.whatsapp.helper.UsuarioFirebase;
+import com.example.whatsapp.model.Usuario;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +51,8 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     private EditText editPerfilNome;
     private StorageReference storageReference;
     private String idUsuario;
+    private ImageView imageEditarNome;
+    private Usuario usuarioLogado;
     private static final int SELECAO_CAMERA = 100;
     private static final int SELECAO_GALERIA = 200;
 
@@ -63,8 +66,9 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         imageButtonGaleria = findViewById(R.id.imageButtonGaleria);
         imageProfile = findViewById(R.id.profileImage);
         editPerfilNome = findViewById(R.id.editPerfilNome);
-
+        imageEditarNome = findViewById(R.id.imageEditarNome);
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
+        usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
 
         idUsuario = UsuarioFirebase.getIdUsuario();
 
@@ -105,6 +109,19 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                 Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 if(i.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(i, SELECAO_GALERIA);
+                }
+            }
+        });
+
+        imageEditarNome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nome = editPerfilNome.getText().toString();
+                boolean retorno = UsuarioFirebase.atualizarNomeUsuario(nome);
+                if (retorno) {
+                    usuarioLogado.setNome(nome);
+                    usuarioLogado.atualizar();
+                    Toast.makeText(ConfiguracoesActivity.this, "Nome alterado", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -165,7 +182,12 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     }
 
     public void atualizaFotoUsuario(Uri url){
-        UsuarioFirebase.atualizarFotoUsuario(url);
+        boolean retorno = UsuarioFirebase.atualizarFotoUsuario(url);
+        if(retorno) {
+            usuarioLogado.setFoto(url.toString());
+            usuarioLogado.atualizar();
+            Toast.makeText(ConfiguracoesActivity.this, "Foto alterada", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
