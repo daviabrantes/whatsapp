@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.whatsapp.R;
+import com.example.whatsapp.config.ConfiguracaoFirebase;
 import com.example.whatsapp.fragment.ContatosFragment;
 import com.example.whatsapp.fragment.ConversasFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
 
         Toolbar toolbar = findViewById(R.id.toolbarPrincipal);
         toolbar.setTitle("Whatsapp");
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         switch(item.getItemId()){
             case R.id.menuSair:
                 deslogarUsuario();
+                abrirTelaLogin();
                 finish();
                 break;
             case R.id.menuConfiguracoes:
@@ -80,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void abrirConfiguracoes(){
         Intent intent = new Intent(MainActivity.this, ConfiguracoesActivity.class);
+        startActivity(intent);
+    }
+
+    public void abrirTelaLogin(){
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 }
