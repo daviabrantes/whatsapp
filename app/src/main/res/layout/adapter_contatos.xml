@@ -3,36 +3,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imageViewFotoContato"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/padrao"></de.hdodenhof.circleimageview.CircleImageView>
+    android:layout_marginTop="0dp"
+    android:layout_marginBottom="0dp"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="0dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:padding="5dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textNomeContato"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:text="Nome"
-            android:textStyle="bold" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageViewFotoContato"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/padrao">
 
-        <TextView
-            android:id="@+id/textEmailContato"
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:text="Email" />
+            android:layout_height="match_parent"
+            android:layout_marginLeft="7dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/textNomeContato"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="Nome"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textEmailContato"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="Email" />
+        </LinearLayout>
+
     </LinearLayout>
 
+<include layout="@layout/divisor">
+</include>
 
 </LinearLayout>
