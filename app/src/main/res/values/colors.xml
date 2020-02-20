@@ -6,4 +6,5 @@
     <color name="colorBackground">#0B8A76</color>
     <color name="colorAccent">#25D366</color>
     <color name="colorGrey">@android:color/darker_gray</color>
+    <color name="balaoRemetente">#e3ffb5</color>
 </resources>
