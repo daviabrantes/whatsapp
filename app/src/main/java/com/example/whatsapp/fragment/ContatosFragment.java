@@ -115,6 +115,7 @@ public class ContatosFragment extends Fragment {
         valueEventListenerContatos = usuariosRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                listaContatos.clear();
                 for(DataSnapshot dados: dataSnapshot.getChildren()){
                     Usuario usuario = dados.getValue(Usuario.class);
 
